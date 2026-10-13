@@ -4,6 +4,34 @@ let dropMaker;
 let gameTimer;
 let score = 0;
 let timeLeft = 30;
+
+// Difficulty settings
+const difficultySettings = {
+  easy: {
+    time: 45,
+    dropInterval: 1500,
+    fallDuration: 5,
+    badChance: 0.2,
+    winScore: 80
+  },
+
+  normal: {
+    time: 30,
+    dropInterval: 1000,
+    fallDuration: 4,
+    badChance: 0.3,
+    winScore: 100
+  },
+
+  hard: {
+    time: 20,
+    dropInterval: 700,
+    fallDuration: 3,
+    badChance: 0.4,
+    winScore: 120
+  }
+};
+
 const resetButton = document.getElementById("reset-btn");
 resetButton.addEventListener("click", resetGame);
 
@@ -16,14 +44,19 @@ function startGame() {
 
   gameRunning = true;
   score = 0;
-  timeLeft = 30;
+
+  // Get selected difficulty
+  const difficulty = document.getElementById("difficulty").value;
+  const settings = difficultySettings[difficulty];
+
+  timeLeft = settings.time;
 
   // Update the score and timer
   document.getElementById("score").textContent = score;
   document.getElementById("time").textContent = timeLeft;
 
-  // Create a new drop every second
-  dropMaker = setInterval(createDrop, 1000);
+  // Create drops based on the selected difficulty
+  dropMaker = setInterval(createDrop, settings.dropInterval);
 
   // Start the countdown timer
   gameTimer = setInterval(updateTimer, 1000);
@@ -48,13 +81,22 @@ function endGame() {
 
   document.getElementById("game-container").innerHTML = "";
 
-  if (score >= 100) {
+  const difficulty = document.getElementById("difficulty").value;
+  const settings = difficultySettings[difficulty];
+
+  if (score >= settings.winScore) {
     document.getElementById("game-container").innerHTML =
       '<div id="win-message">🎉 Great job! You collected clean water! 🎉</div>';
 
     document.getElementById("win-message").style.display = "block";
   } else {
-    alert("Game over! Your score was " + score);
+    alert(
+      "Game over! Your score was " +
+      score +
+      ". You needed " +
+      settings.winScore +
+      " points to win."
+    );
   }
 }
 
@@ -65,7 +107,11 @@ function resetGame() {
   clearInterval(gameTimer);
 
   score = 0;
-  timeLeft = 30;
+
+  const difficulty = document.getElementById("difficulty").value;
+  const settings = difficultySettings[difficulty];
+
+  timeLeft = settings.time;
 
   document.getElementById("score").textContent = score;
   document.getElementById("time").textContent = timeLeft;
@@ -73,11 +119,15 @@ function resetGame() {
 }
 
 function createDrop() {
+  // Get selected difficulty
+  const difficulty = document.getElementById("difficulty").value;
+  const settings = difficultySettings[difficulty];
+
   // Create a new drop
   const drop = document.createElement("div");
 
   // Randomly decide if the drop is good or bad
-  const isBad = Math.random() < 0.3;
+  const isBad = Math.random() < settings.badChance;
 
   if (isBad) {
     drop.className = "bad-drop";
@@ -99,8 +149,8 @@ function createDrop() {
 
   drop.style.left = xPosition + "px";
 
-  // Make the drop fall for 4 seconds
-  drop.style.animationDuration = "4s";
+  // Make the drop fall based on difficulty
+  drop.style.animationDuration = settings.fallDuration + "s";
 
   // Add the drop to the game
   document.getElementById("game-container").appendChild(drop);
