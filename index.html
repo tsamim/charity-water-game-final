@@ -15,19 +15,31 @@
         <p class="game-tagline">Catch the clean drops and avoid the dirty ones!</p>
 
         <div class="score-panel">
+
+            <div class="difficulty">
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
             <div class="score">Score: <span id="score">0</span></div>
+
             <div class="timer">Time: <span id="time">30</span>s</div>
+
             <button id="start-btn">Start Game</button>
             <button id="reset-btn">Reset Game</button>
+
         </div>
 
         <div id="game-container">
-    <div id="win-message">🎉 Great job! You collected clean water! 🎉</div>
-</div>
+            <div id="win-message">🎉 Great job! You collected clean water! 🎉</div>
+        </div>
 
     </div>
 
     <script src="script.js"></script>
-</body>
 </body>
 </html>
