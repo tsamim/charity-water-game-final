@@ -1,4 +1,25 @@
 // Variables to control game state
+// Sound effect for collecting water drops
+function playDropSound() {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.frequency.value = 600;
+  oscillator.type = "sine";
+
+  gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.01,
+    audioContext.currentTime + 0.15
+  );
+
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + 0.15);
+}
 let gameRunning = false;
 let dropMaker;
 let gameTimer;
@@ -159,11 +180,12 @@ function createDrop() {
   drop.addEventListener("click", function () {
     if (!gameRunning) return;
 
-    if (isBad) {
-      score -= 10;
-    } else {
-      score += 10;
-    }
+ if (isBad) {
+  score -= 10;
+} else {
+  score += 10;
+  playDropSound();
+}
 
     document.getElementById("score").textContent = score;
 // Track score milestones
