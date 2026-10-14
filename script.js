@@ -166,7 +166,10 @@ function createDrop() {
     }
 
     document.getElementById("score").textContent = score;
-
+// Track score milestones
+if (score === 50 || score === 100 || score === 150) {
+  alert("🎉 Milestone reached! You scored " + score + " points!");
+}
     // Remove the drop after clicking
     drop.remove();
   });
